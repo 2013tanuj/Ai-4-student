@@ -1,44 +1,44 @@
-# [Project name]
+# AI 4 STUDENT
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+An approachable bilingual study companion for school students, powered by Google Gemini.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
-- `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- `pnpm --filter @workspace/ai-4-student run dev` — run the web app
+- `pnpm --filter @workspace/api-server run dev` — run the shared API server
+- `pnpm run typecheck` — typecheck all workspace packages
+- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from OpenAPI
+- Required secret: `GEMINI_API_KEY` — read only by the API server
 
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
+- Frontend: React, Vite, Tailwind CSS, TanStack Query, Wouter
+- API: Express 5 with Google Gemini Interactions API
+- Validation and API codegen: OpenAPI, Zod, Orval
 - Build: esbuild (CJS bundle)
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/ai-4-student/src/App.tsx` — dashboard, bilingual study tools, and routes
+- `artifacts/ai-4-student/src/index.css` — app theme and responsive layout
+- `artifacts/api-server/src/routes/study.ts` — server-side Gemini integration
+- `lib/api-spec/openapi.yaml` — source of truth for API contracts
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Gemini requests are made only by the API server; never expose `GEMINI_API_KEY` to browser code.
+- Gemini interactions use `store: false`; chat history is sent by the client rather than retained by Google.
+- Study tools are stateless; chat history currently lives in the open page session.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- AI study chat, step-by-step homework explanations, chapter notes, quizzes/MCQs, and timetable suggestions
+- English and Hindi response options
+- Responsive dashboard and navigation designed for phone screens
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
-
-## Gotchas
-
-_Populate as you build — sharp edges, "always run X before Y" rules._
 
 ## Pointers
 

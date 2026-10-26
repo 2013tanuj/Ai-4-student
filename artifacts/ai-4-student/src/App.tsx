@@ -196,11 +196,11 @@ function StudyChat() {
     setText('');
     setResponse(null);
     setLastPrompt(clean);
-    generation.mutate({ data: { intent: 'chat', prompt: clean, language, history: turns } });
+    generation.mutate({ data: { intent: 'chat', prompt: clean, language, history: history.slice(-12) } });
   };
   const retry = () => {
     if (!lastPrompt) return;
-    generation.mutate({ data: { intent: 'chat', prompt: lastPrompt, language, history: history.slice(-12) } });
+    generation.mutate({ data: { intent: 'chat', prompt: lastPrompt, language, history: history.slice(0, -1).slice(-12) } });
   };
   return <>
     <div style={{ marginBottom: 21 }}><div className="eyebrow" style={{ marginBottom: 8 }}>YOUR FRIENDLY STUDY SPACE</div><h1 className="page-title">Ask away. We’re listening.</h1><p style={{ color: '#777f99', fontSize: 14, margin: '9px 0 0' }}>No question is too small. Get a clear explanation in your language.</p></div>
