@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: study
+    description: AI-powered student study tools
 paths:
   /healthz:
     get:
@@ -24,6 +26,49 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /study/generate:
+    post:
+      operationId: generateStudyContent
+      tags: [study]
+      summary: Generate study help with Gemini
+      description: Creates student-friendly explanations, notes, quizzes, chat replies, or study plans.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudyGenerationInput"
+      responses:
+        "200":
+          description: Generated study content
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyGenerationResponse"
+        "400":
+          description: Invalid study request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "502":
+          description: AI provider could not complete the request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "503":
+          description: AI service is not configured
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +78,67 @@ components:
           type: string
       required:
         - status
+    StudyChatTurn:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [user, model]
+        text:
+          type: string
+          maxLength: 2000
+      required: [role, text]
+    StudyGenerationInput:
+      type: object
+      properties:
+        intent:
+          type: string
+          enum: [chat, explain, notes, quiz, timetable]
+        prompt:
+          type: string
+          minLength: 1
+          maxLength: 5000
+        language:
+          type: string
+          enum: [english, hindi]
+        subject:
+          type: string
+          maxLength: 80
+        grade:
+          type: string
+          maxLength: 40
+        questionCount:
+          type: integer
+          minimum: 2
+          maximum: 20
+        studyHours:
+          type: number
+          minimum: 1
+          maximum: 12
+        history:
+          type: array
+          maxItems: 12
+          items:
+            $ref: "#/components/schemas/StudyChatTurn"
+      required: [intent, prompt, language]
+    StudyGenerationResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+        model:
+          type: string
+        language:
+          type: string
+          enum: [english, hindi]
+        createdAt:
+          type: string
+          format: date-time
+      required: [answer, model, language, createdAt]
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
 

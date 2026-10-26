@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "AI 4 STUDENT"
+description = "A mobile-friendly study companion for school students with bilingual AI help, step-by-step homework explanations, chapter notes, quizzes, and personalized study planning."
+version = "1.0.0"
+id = "artifacts/ai-4-student"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24202
+
+[services.development]
+run = "pnpm --filter @workspace/ai-4-student run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/ai-4-student", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/ai-4-student/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24202"
+BASE_PATH = "/"
